@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<main id="main" class="main">
+    {% include "modal/messages.html" %}
+    <div class="pagetitle">
+      <h1>Edit Rectifier</h1>
+    </div><!-- End Page Title -->
+
+    <section class="section">
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Isian Rectifier</h5>
+              
+                            <!-- Horizontal Form -->
+                            <form action="{% url "edit_rectifier" recti.id %}" method="POST">
+                                {% csrf_token %}
+                                
+                              <div class="row mb-3">
+                                <label for="inputEmail3" class="col-sm-2 col-form-label">Gardu</label>
+                                <div class="col-sm-10">
+                                  {{ form.gardu }}
+                                </div>
+                              </div>
+                              <div class="row mb-3">
+                                <label for="inputEmail3" class="col-sm-2 col-form-label">Serial Number</label>
+                                <div class="col-sm-10">
+                                  {{ form.serial_number_recti}}
+                                </div>
+                              </div>
+                              <div class="row mb-3">
+                                <label for="inputEmail3" class="col-sm-2 col-form-label">Brand Rectifier</label>
+                                <div class="col-sm-10">
+                                  {{ form.brand_recti}}
+                                </div>
+                              </div>
+                              <div class="row mb-3">
+                                <label for="inputEmail3" class="col-sm-2 col-form-label">Model Rectifier</label>
+                                <div class="col-sm-10">
+                                  {{ form.model_recti }}
+                                </div>
+                              </div>
+                              
+                              <div class="row mb-3">
+                                <label for="inputEmail3" class="col-sm-2 col-form-label">Brand Baterai</label>
+                                <div class="col-sm-10">
+                                  {{ form.brand_baterai}}
+                                </div>
+                              </div>
+                              <div class="row mb-3">
+                                <label for="inputEmail3" class="col-sm-2 col-form-label">Type Baterai</label>
+                                <div class="col-sm-10">
+                                  {{ form.type_baterai }}
+                                </div>
+                              </div>
+                              <div class="row mb-3">
+                                <label for="inputEmail3" class="col-sm-2 col-form-label">Jumlah Baterai</label>
+                                <div class="col-sm-10">
+                                  {{ form.jumlah_baterai}}
+                                </div>
+                              </div>
+                              <div class="row mb-3">
+                                <label for="inputEmail3" class="col-sm-2 col-form-label">Status Rectifier</label>
+                                <div class="col-sm-10 ">
+                                  {{ form.recti_status }}
+                                </div>
+                              </div>
+
+                              <div class="row mb-3">
+                                <label for="inputEmail3" class="col-sm-2 col-form-label">Note</label>
+                                <div class="col-sm-10">
+                                  {{ form.note }}
+                                </div>
+                              </div>
+                              
+                              <div class="text-center">
+                                <button type="submit" class="btn btn-primary">Save</button>
+                                <a href="{% url "all_rectifier" %}" class="btn btn-danger">Cancel</a>
+                              </div>
+                              
+                            </form><!-- End Horizontal Form -->
+              
+                          </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+  </main>
+
+{% endblock content %}

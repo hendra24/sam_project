@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+<main id="main" class="main">
+    {% include "modal/messages.html" %}
+    <div class="pagetitle">
+      <h1>Daftar Rectifier</h1>
+    </div><!-- End Page Title -->
+
+    <section class="section">
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <div class="card">
+                        
+                        <div class="card-body">
+                            <div class="datatable-top">
+                                <div class="datatable-dropdown">
+                                        <label>
+                                            <a href={% url "create_rectifier"  %} class="btn btn-success">+ Tambahkan Rectifier</a>
+                                        </label>
+                                </div>
+                                <div class="datatable-search">
+                                        <input class="datatable-input" placeholder="Search..." type="search" title="Search within table">
+                                </div>
+                            </div>
+                            
+                            <!-- Table with hoverable rows -->
+                            <table class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <th scope="col">Gardu</th>
+                                    <th scope="col">UP3</th>
+                                    <th scope="col">Brand Rectifier</th>
+                                    <th scope="col">Model Rectifier</th>
+                                    <th scope="col">Brand Baterai</th>
+                                    <th scope="col">Model Baterai</th>
+                                    <th scope="col">Recti Status</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for recti in rectis %}
+                                <tr>
+                                    <td><a href="{% url "detail_rectifier"  recti.id  %}">{{ recti.gardu }}</a></td>
+                                    <td>{{ recti.gardu.up3}}</td>
+                                    <td>{{ recti.brand_recti }}</td>
+                                    <td>{{ recti.model_recti }}</td>
+                                    <td>{{ recti.brand_baterai }}</td>
+                                    <td>{{ recti.model_baterai }}</td>
+                                    {% if recti.recti_status == 0 %}
+                                    <td><span class="badge bg-danger">Tidak Aktif</span></td>
+                                    {% else %}
+                                    <td><span class="badge bg-success">Aktif</span></td>
+                                    {% endif %}
+                                </tr>
+                                {% endfor %}
+                                </tbody>
+                                
+                            </table>
+                            <!-- End Table with hoverable rows -->
+
+                            <!-- Paginator -->
+                            <div class="datatable-bottom">
+                                <div class="datatable-info">Found of {{ jumlah }} entries</div>
+                                <nav class="datatable-pagination">
+                                    {% if rectis.has_other_pages %}
+                                    <ul class="datatable-pagination-list">
+                                        {% if rectis.has_previous %}
+                                        <li class="datatable-pagination-list-item"><a data-page="1" class="datatable-pagination-list-item-link" aria-label="Page 1" href="?page={{rectis.previous_page_number}}"><</a></li>
+                                        {% else %}
+                                        <li class="datatable-pagination-list-item datatable-hidden datatable-disabled"><a data-page="1" class="datatable-pagination-list-item-link" aria-label="Page 1" href=""><</a></li>
+                                        {% endif %}
+                                        {% for i in rectis.paginator.page_range  %}
+                                            {% if rectis.number == i %}
+                                                <li class="datatable-pagination-list-item datatable-active"><a data-page="1" class="datatable-pagination-list-item-link" aria-label="Page {{i}}" href="#" >{{i}}</a></li>
+                                            {% else %}
+                                            <li class="datatable-pagination-list-item"><a data-page="2" class="datatable-pagination-list-item-link" aria-label="Page {{i}}" href="?page={{i}}">{{ i }}</a></li>
+                                            {% endif %}
+                                        {% endfor %}
+                                        {% if rectis.has_next %}
+                                        <li class="datatable-pagination-list-item"><a data-page="1" class="datatable-pagination-list-item-link" aria-label="Page 1" href="?page={{rectis.next_page_number}}">></a></li>
+                                        {% else %}
+                                        <li class="datatable-pagination-list-item datatable-hidden datatable-disabled"><button data-page="1" class="datatable-pagination-list-item-link" aria-label="Page 1">></button></li>
+                                        {% endif %}
+                                        
+                                    </ul>
+                                    {% endif %}
+                                </nav>
+                            </div>
+                            <!-- Paginator END-->
+    
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+  </main>
+
+{% endblock content %}
