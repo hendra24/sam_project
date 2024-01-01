@@ -1,4 +1,110 @@
 {% extends "base.html" %}
+{% load static %}
 {% block content %}
+
+<main id="main" class="main">
+    {% include "modal/messages.html" %}
+    {% if 'inventory' in request.path  %}
+    <div class="pagetitle">
+        <h1>Inventory Fault Indicator</h1>
+      </div><!-- End Page Title -->
+    {% else %}
+    <div class="pagetitle">
+        <h1>Daftar Fault Indicator</h1>
+    </div><!-- End Page Title -->
+    {% endif %}
+
+    <section class="section">
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <div class="card">
+                        
+                        <div class="card-body">
+                            
+                            <div class="datatable-top">
+                                <div class="datatable-dropdown">
+                                        <label>
+                                            <a href={% url "create_fi"  %} class="btn btn-success">+ Tambahkan Fault Indicator</a>
+                                        </label>
+                                </div>
+                                <div class="datatable-search">
+                                    <form class="search-form d-flex align-items-center" method="GET" action="{% url "cari" asset='fis' %}">
+                                        <input type="text" name="keyword" placeholder="Cari..." title="Enter search keyword">
+                                        <button type="submit" title="Search"><i class="bi bi-search"></i></button>
+                                      </form>
+                                </div>
+                            </div>
+                            
+                            <!-- Table with hoverable rows -->
+                            <table class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <th scope="col">Gardu</th>
+                                    <th scope="col">UP3</th>
+                                    <th scope="col">Brand FI</th>
+                                    <th scope="col">Model FI</th>
+                                    <th scope="col">Brand CT</th>
+                                    <th scope="col">FI Status</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for fi in fis %}
+                                <tr>
+                                    <td><a href=" {% url "detail_fi" fi.id %} ">{{ fi.gardu }}</a></td>
+                                    <td>{{ fi.gardu.up3}}</td>
+                                    <td>{{ fi.brand_fi }}</td>
+                                    <td>{{ fi.model_fi }}</td>
+                                    <td>{{ media.brand_ct }}</td>
+                                    {% if fi.fi_status == 0 %}
+                                    <td><span class="badge bg-danger">Tidak Aktif</span></td>
+                                    {% else %}
+                                    <td><span class="badge bg-success">Aktif</span></td>
+                                    {% endif %}
+                                </tr>
+                                {% endfor %}
+                                </tbody>
+                                
+                            </table>
+                            <!-- End Table with hoverable rows -->
+
+                            <!-- Paginator -->
+                            <div class="datatable-bottom">
+                                <div class="datatable-info">Found of {{ jumlah }} entries</div>
+                                <nav class="datatable-pagination">
+                                    {% if fis.has_other_pages %}
+                                    <ul class="datatable-pagination-list">
+                                        {% if fis.has_previous %}
+                                        <li class="datatable-pagination-list-item"><a data-page="1" class="datatable-pagination-list-item-link" aria-label="Page 1" href="?page={{fis.previous_page_number}}"><</a></li>
+                                        {% else %}
+                                        <li class="datatable-pagination-list-item datatable-hidden datatable-disabled"><a data-page="1" class="datatable-pagination-list-item-link" aria-label="Page 1" href=""><</a></li>
+                                        {% endif %}
+                                        {% for i in fis.paginator.page_range  %}
+                                            {% if fis.number == i %}
+                                                <li class="datatable-pagination-list-item datatable-active"><a data-page="1" class="datatable-pagination-list-item-link" aria-label="Page {{i}}" href="#" >{{i}}</a></li>
+                                            {% else %}
+                                            <li class="datatable-pagination-list-item"><a data-page="2" class="datatable-pagination-list-item-link" aria-label="Page {{i}}" href="?page={{i}}">{{ i }}</a></li>
+                                            {% endif %}
+                                        {% endfor %}
+                                        {% if fis.has_next %}
+                                        <li class="datatable-pagination-list-item"><a data-page="1" class="datatable-pagination-list-item-link" aria-label="Page 1" href="?page={{fis.next_page_number}}">></a></li>
+                                        {% else %}
+                                        <li class="datatable-pagination-list-item datatable-hidden datatable-disabled"><button data-page="1" class="datatable-pagination-list-item-link" aria-label="Page 1">></button></li>
+                                        {% endif %}
+                                        
+                                    </ul>
+                                    {% endif %}
+                                </nav>
+                            </div>
+                            <!-- Paginator END-->
+    
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+  </main>
 
 {% endblock content %}

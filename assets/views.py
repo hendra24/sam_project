@@ -3,9 +3,10 @@ from .models import Gardu, Rtu, Rectifier, FaultIndicator, Media
 from django.shortcuts import get_object_or_404
 from django.contrib import messages, auth
 from django.contrib.auth.decorators import login_required
-from .forms import GarduForm, EditGarduForm, RtuForm, RectifierForm, MediaForm
+from .forms import GarduForm, EditGarduForm, RtuForm, RectifierForm, MediaForm, FaultIndicatorForm
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
-  
+from django.db.models import Q
+import logging
 # Create your views here.
 
 #GARDU VIEW HANDLER
@@ -150,7 +151,7 @@ def delete_rtu(request, id):
 #END RTU HANDLER
 
 #recti view handler
-def all_recifier(request):
+def all_rectifier(request):
     if request.resolver_match.url_name == 'inventory_all_rectifier':
         rectis = Rectifier.objects.filter(gardu=None).order_by('gardu')
     else:
@@ -165,7 +166,7 @@ def all_recifier(request):
     }
     return render(request, 'assets/all_rectifier.html', context)
 
-def create_recifier(request):
+def create_rectifier(request):
     if request.method == 'POST':
         form = RectifierForm(request.POST)
         if form.is_valid():
@@ -305,9 +306,10 @@ def edit_media(request, id):
             protokol = form.cleaned_data['protokol']
             media_status = form.cleaned_data['media_status']
             note = form.cleaned_data['note']
-            media = Media.objects.update(gardu=gardu, serial_number_media=serial_number_media, brand_media=brand_media,
-                                                model_media=model_media, protokol=protokol, media_status=media_status,note=note)
-            messages.success(request, request.resolver_match.url_name)
+            media = Media.objects.filter(id=id).update(
+                gardu=gardu, serial_number_media=serial_number_media, brand_media=brand_media,
+                model_media=model_media, protokol=protokol, media_status=media_status,note=note)
+            messages.success(request, "Update data media berhasil")
             return redirect('detail_media', id)
         else:
             messages(request, form.errors)
@@ -316,10 +318,229 @@ def edit_media(request, id):
 
 #handler view fi assets
 def all_fi(request):
-    return render(request, 'assets/all_fi.html')
+    if request.resolver_match.url_name == 'inventory_all_fi':
+        fis = FaultIndicator.objects.filter(gardu=None).order_by('gardu')
+    else:
+        fis = FaultIndicator.objects.all().order_by('gardu').exclude(gardu=None)
+    paginator = Paginator(fis, 50)
+    page= request.GET.get('page')
+    paged_fis = paginator.get_page(page)
+    jumlah = fis.count()
+    context = {
+        'fis' : paged_fis,
+        'jumlah' : jumlah,
+    }
+    return render(request, 'assets/all_fi.html', context)
 
+def create_fi(request):
+    if request.method == 'POST':
+        form = FaultIndicatorForm(request.POST)
+        if form.is_valid():
+            gardu = form.cleaned_data['gardu']
+            serial_number_fi = form.cleaned_data['serial_number_fi']
+            brand_fi = form.cleaned_data['brand_fi']
+            model_fi = form.cleaned_data['model_fi']
+            fi_status = form.cleaned_data['fi_status']
+            brand_ct = form.cleaned_data['brand_ct']
+            model_ct = form.cleaned_data['model_ct']
+            ct_status = form.cleaned_data['ct_status']
+            note = form.cleaned_data['note']
+            fi = FaultIndicator.objects.create(gardu=gardu,serial_number_fi=serial_number_fi, brand_fi=brand_fi,model_fi=model_fi, fi_status=fi_status,
+                                               brand_ct=brand_ct,model_ct=model_ct, ct_status=ct_status,note=note)
+            fi.save()
+            messages.success(request, 'Fault Indicator berhasil di buat !!')
+            return redirect('all_fi')
+        else:
+            messages.warning(request, form.errors)
+            return redirect('create_fi')
+    else:
+      form = FaultIndicatorForm() 
+    return render(request, 'assets/create_fi.html', {'form': form})
+
+def detail_fi(request, id):
+    fi = get_object_or_404(FaultIndicator, id=id)
+    return render(request, 'assets/fi_detail.html', {'fi' : fi })
+
+def edit_fi(request, id):
+    fi = get_object_or_404(FaultIndicator, id=id)
+   
+    form = FaultIndicatorForm(initial={
+        'gardu': fi.gardu, 
+        'serial_number_fi' : fi.serial_number_fi, 
+        'brand_fi': fi.brand_fi, 
+        'model_fi': fi.model_fi,
+        'fi_status': int(fi.fi_status),
+        'brand_ct': fi.brand_ct, 
+        'model_ct': fi.model_ct,
+        'ct_status': int(fi.ct_status),
+        'note' : fi.note
+        })
+    if request.method == 'POST':
+        form = FaultIndicatorForm(request.POST)
+        if form.is_valid():
+            gardu = form.cleaned_data['gardu']
+            serial_number_fi = form.cleaned_data['serial_number_fi']
+            brand_fi = form.cleaned_data['brand_fi']
+            model_fi = form.cleaned_data['model_fi']
+            fi_status = form.cleaned_data['fi_status']
+            brand_ct = form.cleaned_data['brand_ct']
+            model_ct = form.cleaned_data['model_ct']
+            ct_status = form.cleaned_data['ct_status']
+            note = form.cleaned_data['note']
+            fi = FaultIndicator.objects.create(gardu=gardu,serial_number_fi=serial_number_fi, brand_fi=brand_fi,model_fi=model_fi, fi_status=fi_status,
+                                               brand_ct=brand_ct,model_ct=model_ct, ct_status=ct_status,note=note)
+            fi.save()
+            messages.success(request, "Update data berhasil")
+            return redirect('detail_fi', id)
+        else:
+            messages.warning(request, form.errors)
+            return redirect('edit_fi', id)
+    return render(request, 'assets/fi_edit.html', {'form' : form, 'fi': fi })
+
+def delete_fi(request, id):
+    FaultIndicator.objects.filter(id=id).delete()
+    return redirect('all_fi')
+
+
+#end handler for fi assets
 
 #move to inventory action
+def move_to_inventory(request, asset ,id):
 
-def move_to_inventory(request, id):
-    pass
+    if asset == 'rtu':
+        rtu = Rtu.objects.get(pk=id)
+        rtu.gardu = None
+        rtu.save()
+        messages.success(request, 'Rtu berhasil di pindahkan ke inventory')
+        return redirect('all_rtu')
+    elif asset == 'rectifier':
+        rectifier = Rectifier.objects.get(pk=id)
+        rectifier.gardu = None
+        messages.success(request, 'Rectifier berhasil di pindahkan ke inventory')
+        return redirect('all_rectifier')
+    elif asset == 'media':
+        media = Media.objects.get(pk=id)
+        media.gardu = None
+        media.save()      
+        messages.success(request, 'Media berhasil di pindahkan ke inventory')  
+        return redirect('all_media')
+    elif asset == 'fault_indicator':
+        fi = FaultIndicator.objects.get(pk=id)
+        fi.gardu = None
+        fi.save()      
+        messages.success(request, 'Fault Indicator berhasil di pindahkan ke inventory')  
+        return redirect('all_fi')
+    else:
+        messages.warning(request, 'Terjadi kesalahan, coba lagi')
+        return redirect('home')
+    
+def cari(request, asset):
+    #variabel to check jika url sebelumnya ada inventory jika ada maka buat kondisi untuk pencarian di invenrtory
+    refer = request.META.get('HTTP_REFERER')
+    
+    if asset == 'gardus' :
+        if 'keyword' in request.GET:
+            keyword = request.GET['keyword']
+            if keyword:
+                result = Gardu.objects.order_by('gardu_name').filter(
+                    Q(gardu_name__icontains=keyword) |
+                    Q(up3__up3__icontains=keyword)
+                    )
+                paginator = Paginator(result, 50)
+                page= request.GET.get('page')
+                paged_result = paginator.get_page(page)
+                jumlah = result.count()
+                context = {
+                    'gardus' : paged_result,
+                    'jumlah' : jumlah,
+                }
+                return render(request, 'assets/all_gardu.html', context)
+        return redirect('all_gardu')
+    elif asset == 'rtus':
+        if 'keyword' in request.GET:
+            keyword = request.GET['keyword']
+            if keyword:
+                result = Rtu.objects.order_by('gardu').filter(
+                    Q(gardu__gardu_name__icontains=keyword) |
+                    Q(gardu__up3__up3__icontains=keyword) |
+                    Q(brand_rtu__icontains=keyword)|
+                    Q(model_rtu__icontains=keyword)
+                    ).exclude(gardu=None)
+                paginator = Paginator(result, 50)
+                page= request.GET.get('page')
+                paged_result = paginator.get_page(page)
+                jumlah = result.count()
+                context = {
+                    'rtus' : paged_result,
+                    'jumlah' : jumlah,
+                }
+                return render(request, 'assets/all_rtu.html', context)
+        
+        return redirect('all_rtu')
+    elif asset == 'rectifiers':
+        if 'keyword' in request.GET:
+            keyword = request.GET['keyword']
+            if keyword:
+                result = Rectifier.objects.order_by('gardu').filter(
+                    Q(gardu__gardu_name__icontains=keyword) |
+                    Q(gardu__up3__up3__icontains=keyword) |
+                    Q(brand_recti__icontains=keyword)|
+                    Q(model_recti__icontains=keyword)|
+                    Q(brand_baterai__icontains=keyword) |
+                    Q(type_baterai__icontains=keyword)
+                    ).exclude(gardu=None)
+                paginator = Paginator(result, 50)
+                page= request.GET.get('page')
+                paged_result = paginator.get_page(page)
+                jumlah = result.count()
+                context = {
+                    'rectis' : paged_result,
+                    'jumlah' : jumlah,
+                }
+                return render(request, 'assets/all_rectifier.html', context)
+        return redirect('all_rectifier')
+    elif asset == 'medias':
+        if 'keyword' in request.GET:
+            keyword = request.GET['keyword']
+            if keyword:
+                result = Media.objects.order_by('gardu').filter(
+                    Q(gardu__gardu_name__icontains=keyword) |
+                    Q(gardu__up3__up3__icontains=keyword) |
+                    Q(brand_media__icontains=keyword)|
+                    Q(model_media__icontains=keyword)|
+                    Q(protokol__icontains=keyword) 
+                    ).exclude(gardu=None)
+                paginator = Paginator(result, 50)
+                page= request.GET.get('page')
+                paged_result = paginator.get_page(page)
+                jumlah = result.count()
+                context = {
+                    'medias' : paged_result,
+                    'jumlah' : jumlah,
+                }
+                return render(request, 'assets/all_media.html', context)
+        return redirect('all_media')
+    elif asset == 'fis':
+        if 'keyword' in request.GET:
+            keyword = request.GET['keyword']
+            if keyword:
+                result = FaultIndicator.objects.order_by('gardu').filter(
+                    Q(gardu__gardu_name__icontains=keyword) |
+                    Q(gardu__up3__up3__icontains=keyword) |
+                    Q(brand_fi__icontains=keyword)|
+                    Q(model_fi__icontains=keyword)|
+                    Q(brand_ct__icontains=keyword) 
+                    ).exclude(gardu=None)
+                paginator = Paginator(result, 50)
+                page= request.GET.get('page')
+                paged_result = paginator.get_page(page)
+                jumlah = result.count()
+                context = {
+                    'fis' : paged_result,
+                    'jumlah' : jumlah,
+                }
+                return render(request, 'assets/all_fi.html', context)
+        return redirect('all_fi')
+    
+    
+    

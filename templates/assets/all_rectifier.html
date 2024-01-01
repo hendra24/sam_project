@@ -4,9 +4,15 @@
 
 <main id="main" class="main">
     {% include "modal/messages.html" %}
+    {% if 'inventory' in request.path  %}
     <div class="pagetitle">
-      <h1>Daftar Rectifier</h1>
+        <h1>Inventory Rectifier</h1>
+      </div><!-- End Page Title -->
+    {% else %}
+    <div class="pagetitle">
+        <h1>Daftar Rectifier</h1>
     </div><!-- End Page Title -->
+    {% endif %}
 
     <section class="section">
         <div class="row">
@@ -22,11 +28,15 @@
                                         </label>
                                 </div>
                                 <div class="datatable-search">
-                                        <input class="datatable-input" placeholder="Search..." type="search" title="Search within table">
+                                    <form class="search-form d-flex align-items-center" method="GET" action="{% url "cari" asset='rectifiers'%}">
+                                        <input type="text" name="keyword" placeholder="Cari..." title="Enter search keyword">
+                                        <button type="submit" title="Search"><i class="bi bi-search"></i></button>
+                                      </form>
                                 </div>
                             </div>
                             
                             <!-- Table with hoverable rows -->
+                            {% if rectis %}
                             <table class="table table-hover">
                                 <thead>
                                 <tr>
@@ -58,6 +68,7 @@
                                 </tbody>
                                 
                             </table>
+                            {% endif %}
                             <!-- End Table with hoverable rows -->
 
                             <!-- Paginator -->

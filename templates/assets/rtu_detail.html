@@ -14,8 +14,18 @@
                 <div class="card">
                     <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title">Informasi RTU {{ RTU.gardu.gardu_name }}</h5>
-              
+                          <div class="row">
+                            <div class="col">
+                              <h5 class="card-title">Informasi RTU {{ rtu.gardu.gardu_name }}</h5>
+                            </div>
+                            {% if rtu.gardu %}
+                            <div class="col card-title ">
+                              <div class="container d-flex justify-content-center">
+                                <a class="btn btn-warning" href="{% url "move_to_inventory" asset='rtu' id=rtu.id %}"><i class="ri-inbox-unarchive-line"></i> Move RTU to Inventory</a>
+                              </div>
+                            </div>
+                            {% endif %}
+                          </div>
                             <!-- Horizontal Form -->
                             <form action="{% url "edit_rtu" rtu.id %}" method="POST">
                                 {% csrf_token %}

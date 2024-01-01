@@ -125,4 +125,35 @@ class MediaForm(forms.ModelForm):
         self.fields['model_media'].widget.attrs['class'] = 'form-control'
         self.fields['protokol'].widget.attrs['class'] = 'form-control'
         self.fields['note'].widget.attrs['class'] = 'form-control'
+
+class FaultIndicatorForm(forms.ModelForm):
+    gardu = forms.ModelChoiceField(queryset=Gardu.objects.all(), empty_label="PILIH GARDU",widget=forms.Select, 
+                                         required=False, to_field_name="gardu_name")
+    fi_status = forms.TypedChoiceField(
+        coerce=lambda x: bool(int(x)),
+        choices=((1, 'Aktif'), (0, 'Tidak Aktif')),
+        widget=forms.Select(attrs={'class': 'form-select'}),
+        initial=0  # Set the initial value (0 or 1)
+    )
+    
+    ct_status = forms.TypedChoiceField(
+        coerce=lambda x: bool(int(x)),
+        choices=((1, 'Aktif'), (0, 'Tidak Aktif')),
+        widget=forms.Select(attrs={'class': 'form-select'}),
+        initial=0  # Set the initial value (0 or 1)
+    )
+    
+    class Meta:
+        model = FaultIndicator
+        fields = ['gardu', 'serial_number_fi', 'brand_fi', 'model_fi', 'fi_status','brand_ct','model_ct','ct_status','note']
+    
+    def __init__(self, *args, **kwargs):
+        super(FaultIndicatorForm, self).__init__(*args, **kwargs)
+        self.fields['gardu'].widget.attrs['class'] = 'form-select'
+        self.fields['serial_number_fi'].widget.attrs['class'] = 'form-control'
+        self.fields['brand_fi'].widget.attrs['class'] = 'form-control'
+        self.fields['model_fi'].widget.attrs['class'] = 'form-control'
+        self.fields['brand_ct'].widget.attrs['class'] = 'form-control'
+        self.fields['model_ct'].widget.attrs['class'] = 'form-control'
+        self.fields['note'].widget.attrs['class'] = 'form-control'
        

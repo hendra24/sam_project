@@ -14,7 +14,18 @@
                 <div class="card">
                     <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title">Informasi Media {{ media.gardu.gardu_name }}</h5>
+                          <div class="row">
+                            <div class="col">
+                              <h5 class="card-title">Informasi Media {{ rtu.gardu.gardu_name }}</h5>
+                            </div>
+                            {% if media.gardu %}
+                            <div class="col card-title ">
+                              <div class="container d-flex justify-content-center">
+                                <a class="btn btn-warning" href="{% url "move_to_inventory" asset='media' id=media.id %}"><i class="ri-inbox-unarchive-line"></i> Move Media to Inventory</a>
+                              </div>
+                            </div>
+                            {% endif %}
+                          </div>
               
                             <!-- Horizontal Form -->
                             <form action="{% url "edit_media" media.id %}" method="POST">

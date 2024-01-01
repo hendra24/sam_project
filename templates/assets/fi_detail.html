@@ -5,7 +5,7 @@
 <main id="main" class="main">
     {% include "modal/messages.html" %}
     <div class="pagetitle">
-      <h1>Detail Rectifier</h1>
+      <h1>Detail Fault Indicator</h1>
     </div><!-- End Page Title -->
 
     <section class="section">
@@ -16,84 +16,83 @@
                         <div class="card-body">
                           <div class="row">
                             <div class="col">
-                              <h5 class="card-title">Informasi Rectifier {{ rtu.gardu.gardu_name }}</h5>
+                              <h5 class="card-title">Informasi Fault Indicator {{ fi.gardu.gardu_name }}</h5>
                             </div>
-                            {% if recti.gardu %}
+                            {% if fi.gardu %}
                             <div class="col card-title ">
                               <div class="container d-flex justify-content-center">
-                                <a class="btn btn-warning" href="{% url "move_to_inventory" asset='rectifier' id=recti.id %}"><i class="ri-inbox-unarchive-line"></i> Move Rectifier to Inventory</a>
+                                <a class="btn btn-warning" href="{% url "move_to_inventory" asset='fault_indicator' id=fi.id %}"><i class="ri-inbox-unarchive-line"></i> Move FI to Inventory</a>
                               </div>
                             </div>
                             {% endif %}
                           </div>
               
                             <!-- Horizontal Form -->
-                            <form action="{% url "edit_rectifier" recti.id %}" method="POST">
+                            <form action="{% url "edit_fi" fi.id %}" method="POST">
                                 {% csrf_token %}
                               <div class="row mb-3">
                                 <label for="inputEmail3" class="col-sm-2 col-form-label">Gardu</label>
                                 <div class="col-sm-10">
-                                  <input type="text" name="gardu_name" class="form-control" id="inputText" value="{{ recti.gardu.gardu_name }}"  disabled>
+                                  <input type="text" name="gardu_name" class="form-control" id="inputText" value="{{ fi.gardu.gardu_name }}" disabled>
                                 </div>
                               </div>
                               <div class="row mb-3">
                                 <label for="inputEmail3" class="col-sm-2 col-form-label">UP3</label>
                                 <div class="col-sm-10">
-                                  <input type="text" name="up3" class="form-control" id="inputText" value="{{ recti.gardu.up3 }}"  disabled>
+                                  <input type="text" name="up3" class="form-control" id="inputText" value="{{ fi.gardu.up3 }}" disabled>
                                 </div>
                               </div>
                               <div class="row mb-3">
-                                <label for="inputEmail3" class="col-sm-2 col-form-label">Serial Number</label>
+                                <label for="inputEmail3" class="col-sm-2 col-form-label">Serial Number FI</label>
                                 <div class="col-sm-10">
-                                  <input type="text" name="long" class="form-control" id="inputText" value="{{ recti.serial_number_recti }}"  disabled>
+                                  <input type="text" name="long" class="form-control" id="inputText" value="{{ fi.serial_number }}" disabled>
                                 </div>
                               </div>
                               <div class="row mb-3">
-                                <label for="inputEmail3" class="col-sm-2 col-form-label">Brand Recti</label>
+                                <label for="inputEmail3" class="col-sm-2 col-form-label">Brand FI</label>
                                 <div class="col-sm-10">
-                                  <input type="text" name="lat" class="form-control" id="inputText" value="{{ recti.brand_recti }}"  disabled>
+                                  <input type="text" name="lat" class="form-control" id="inputText" value="{{ fi.brand_fi }}" disabled>
                                 </div>
                               </div>
                               <div class="row mb-3">
-                                <label for="inputEmail3" class="col-sm-2 col-form-label">Model Recti</label>
+                                <label for="inputEmail3" class="col-sm-2 col-form-label">Model FI</label>
                                 <div class="col-sm-10">
-                                  <input type="text" name="lat" class="form-control" id="inputText" value="{{ recti.model_recti }}"  disabled>
+                                  <input type="text" name="lat" class="form-control" id="inputText" value="{{ fi.model_fi }}" disabled>
                                 </div>
                               </div>
                               <div class="row mb-3">
-                                <label for="inputEmail3" class="col-sm-2 col-form-label">Brand Baterai</label>
+                                <label for="inputEmail3" class="col-sm-2 col-form-label">Status FI</label>
                                 <div class="col-sm-10">
-                                  <input type="text" name="long" class="form-control" id="inputText" value="{{ recti.brand_baterai}}"  disabled>
+                                  <input type="text" name="rc_status" class="form-control" id="inputText" value=" {% if fi.fi_status == 0 %}Tidak Aktif{% else %}Aktif{% endif %}"  disabled >
                                 </div>
                               </div>
                               <div class="row mb-3">
-                                <label for="inputEmail3" class="col-sm-2 col-form-label">Type Baterai</label>
+                                <label for="inputEmail3" class="col-sm-2 col-form-label">Brand CT</label>
                                 <div class="col-sm-10">
-                                  <input type="text" name="lat" class="form-control" id="inputText" value="{{ recti.type_baterai }}"  disabled>
+                                  <input type="text" name="lat" class="form-control" id="inputText" value="{{ fi.brand_ct }}" disabled>
                                 </div>
                               </div>
                               <div class="row mb-3">
-                                <label for="inputEmail3" class="col-sm-2 col-form-label">Jumlah Baterai</label>
+                                <label for="inputEmail3" class="col-sm-2 col-form-label">Model CT</label>
                                 <div class="col-sm-10">
-                                  <input type="text" name="lat" class="form-control" id="inputText" value="{{ recti.jumlah_baterai }}"  disabled>
+                                  <input type="text" name="lat" class="form-control" id="inputText" value="{{ fi.model_ct }}" disabled>
                                 </div>
                               </div>
                               <div class="row mb-3">
-                                <label for="inputEmail3" class="col-sm-2 col-form-label">Status Recti</label>
+                                <label for="inputEmail3" class="col-sm-2 col-form-label">Status CT</label>
                                 <div class="col-sm-10">
-                                  <input type="text" name="rc_status" class="form-control" id="inputText" value=" {% if recti.recti_status == 0 %}Tidak Aktif{% else %}Aktif{% endif %}"  disabled >
+                                  <input type="text" name="rc_status" class="form-control" id="inputText" value=" {% if ct.ct_status == 0 %}Tidak Aktif{% else %}Aktif{% endif %}"  disabled >
                                 </div>
                               </div>
                               <div class="row mb-3">
                                 <label for="inputEmail3" class="col-sm-2 col-form-label">Note</label>
                                 <div class="col-sm-10">
-                                  <textarea type="text" name="lat" class="form-control" id="inputText"  disabled>{{ recti.note }}</textarea>
+                                  <input type="text" name="lat" class="form-control" id="inputText" value="{{ fi.note }}" disabled>
                                 </div>
                               </div>
-                              
                               <div class="text-center">
-                                <a href="{% url "edit_rectifier" recti.id %}" class="btn btn-primary">Edit</a>
-                                <a href="{% url "delete_rectifier" recti.id %}" class="btn btn-danger">Delete</a>
+                                <a href="{% url "edit_fi" fi.id %}" class="btn btn-primary">Edit</a>
+                                <a href="{% url "delete_fi" fi.id %}" class="btn btn-danger">Delete</a>
                               </div>
                             </form><!-- End Horizontal Form -->
               
