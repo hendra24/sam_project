@@ -73,7 +73,15 @@
 <script>
   $(document).ready(function() {
     // Your jQuery code here
-    
+     // Show the loading spinner on page load
+     $('#loadingSpinner').show();
+
+     // Hide the loading spinner after the page has fully loaded
+     $(window).on('load', function () {
+         $('#loadingSpinner').hide();
+     });
+ 
+     // You can also add other actions or event handlers here as needed
     setTimeout(function(){
         $('#message').fadeOut('slow');
     }, 4000);

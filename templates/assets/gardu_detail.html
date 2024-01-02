@@ -50,11 +50,19 @@
                                 </div>
                               </div>
                               <div class="text-center">
-                                <a href="{% url "edit_gardu" gardu.id %}" class="btn btn-primary">Edit</a>
-                                <a href="{% url "delete_gardu" gardu.gardu_name %}" class="btn btn-danger">Delete</a>
+                                <a href="{% url "edit_gardu" gardu.id as edit_url %}" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#edit-modal" >Edit</a>
+                                <a href="{% url "delete_gardu" gardu.gardu_name as delete_url %}" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#delete-modal">Delete</a>
                               </div>
                             </form><!-- End Horizontal Form -->
-              
+                            {%  with modal_action='edit-modal' btn_warna='primary' modal_message='<b>Apakah ingin melakukan edit data ?</b>' btn_tag='Edit' url_meta=edit_url %}
+                                {% include "modal/confirmation.html" %}
+                            {% endwith %}
+
+                            {%  with modal_action='delete-modal' btn_warna='danger' modal_message='<b>Apakah ingin menghapus data ?</b>' btn_tag='Delete' url_meta=delete_url %}
+                                {% include "modal/confirmation.html" %}
+                            {% endwith %}
+                            
+
                           </div>
                         
                     </div>

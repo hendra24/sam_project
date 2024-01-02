@@ -1,0 +1,21 @@
+
+
+<!--Edit Confirmation-->
+<div class="modal fade" id="{{ modal_action }}" tabindex="-1" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+        <div class="modal-header">
+        <h5 class="modal-title"><b>Konfirmasi</b></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+        {{ modal_message}}
+        </div>
+        <div class="modal-footer">
+        <a type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</a>
+        <a href="{{ url_meta }}" type="button" class="btn btn-{{btn_warna}}">{{ btn_tag }}</a>
+        </div>
+    </div>
+    </div>
+</div>
+<!-- End Edit Confirmation Modal-->

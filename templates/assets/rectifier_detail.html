@@ -21,7 +21,7 @@
                             {% if recti.gardu %}
                             <div class="col card-title ">
                               <div class="container d-flex justify-content-center">
-                                <a class="btn btn-warning" href="{% url "move_to_inventory" asset='rectifier' id=recti.id %}"><i class="ri-inbox-unarchive-line"></i> Move Rectifier to Inventory</a>
+                                <a class="btn btn-warning" href="{% url "move_to_inventory" asset='rectifier' id=recti.id as move_url%}" data-bs-toggle="modal" data-bs-target="#move-modal"><i class="ri-inbox-unarchive-line"></i> Move Rectifier to Inventory</a>
                               </div>
                             </div>
                             {% endif %}
@@ -92,11 +92,22 @@
                               </div>
                               
                               <div class="text-center">
-                                <a href="{% url "edit_rectifier" recti.id %}" class="btn btn-primary">Edit</a>
-                                <a href="{% url "delete_rectifier" recti.id %}" class="btn btn-danger">Delete</a>
+                                <a href="{% url "edit_rectifier" recti.id as edit_url%}" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#edit-modal">Edit</a>
+                                <a href="{% url "delete_rectifier" recti.id as delete_url%}" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#delete-modal">Delete</a>
                               </div>
                             </form><!-- End Horizontal Form -->
-              
+                            {%  with modal_action='edit-modal' btn_warna='primary' modal_message='<b>Apakah ingin melakukan edit data ?</b>' btn_tag='Edit' url_meta=edit_url %}
+                                {% include "modal/confirmation.html" %}
+                            {% endwith %}
+
+                            {%  with modal_action='delete-modal' btn_warna='danger' modal_message='<b>Apakah ingin menghapus data ?</b>' btn_tag='Delete' url_meta=delete_url %}
+                                {% include "modal/confirmation.html" %}
+                            {% endwith %}
+
+                            {%  with modal_action='move-modal' btn_warna='warning' modal_message='<b>Apakah ingin memindahkan asset ke inventory ?</b>' btn_tag='Move' url_meta=move_url %}
+                                {% include "modal/confirmation.html" %}
+                            {% endwith %}
+
                           </div>
                         
                     </div>
